@@ -125,4 +125,22 @@ describe('UserEntity integration tests', () => {
       })
     })
   })
+
+  describe('Update method', () => {
+    it('should throw an error when update a user with invalid fields', () => {
+      const entity = new UserEntity(UserDataBuilder({}))
+      expect(() => entity.update(null)).toThrow(EntityValidationError)
+      expect(() => entity.update('')).toThrow(EntityValidationError)
+      expect(() => entity.update(10 as any)).toThrow(EntityValidationError)
+      expect(() => entity.update('a'.repeat(256))).toThrow(
+        EntityValidationError,
+      )
+    })
+
+    it('should not an error when updating a user with valid fields', () => {
+      expect.assertions(0)
+      const entity = new UserEntity(UserDataBuilder({}))
+      entity.update('other name')
+    })
+  })
 })
