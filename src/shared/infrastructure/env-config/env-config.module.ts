@@ -4,4 +4,4 @@ import { EnvConfigService } from './env-config.service'
 @Module({
   providers: [EnvConfigService],
 })
-export class EnvConfigModule { }
+export class EnvConfigModule {}
