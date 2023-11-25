@@ -3,6 +3,14 @@ import { UserDataBuilder } from '../../../testing/helpers/user-data-builders'
 import { UserEntity, UserProps } from '../../user.entity'
 describe('UserEntity integration tests', () => {
   describe('Constructor method', () => {
+    it('should not an error when creating a user with valid fields', () => {
+      expect.assertions(0)
+      const props: UserProps = {
+        ...UserDataBuilder({}),
+      }
+      new UserEntity(props)
+    })
+
     describe('Name field', () => {
       it('should throw an error when creating a user with null name', () => {
         const props: UserProps = {
@@ -34,6 +42,7 @@ describe('UserEntity integration tests', () => {
         expect(() => new UserEntity(props)).toThrow(EntityValidationError)
       })
     })
+
     describe('Email field', () => {
       it('should throw an error when creating a user with null email', () => {
         const props: UserProps = {
@@ -65,6 +74,7 @@ describe('UserEntity integration tests', () => {
         expect(() => new UserEntity(props)).toThrow(EntityValidationError)
       })
     })
+
     describe('Password field', () => {
       it('should throw an error when creating a user with null password', () => {
         const props: UserProps = {
