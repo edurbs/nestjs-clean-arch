@@ -96,5 +96,23 @@ describe('UserEntity integration tests', () => {
         expect(() => new UserEntity(props)).toThrow(EntityValidationError)
       })
     })
+
+    describe('CreatedAt field', () => {
+      it('should throw an error when creating a user with invalid createdAt', () => {
+        const props: UserProps = {
+          ...UserDataBuilder({}),
+          createdAt: '2023' as any,
+        }
+        expect(() => new UserEntity(props)).toThrow(EntityValidationError)
+      })
+
+      it('should throw an error when creating a user with createdAt with a number', () => {
+        const props: UserProps = {
+          ...UserDataBuilder({}),
+          createdAt: 10 as any,
+        }
+        expect(() => new UserEntity(props)).toThrow(EntityValidationError)
+      })
+    })
   })
 })
