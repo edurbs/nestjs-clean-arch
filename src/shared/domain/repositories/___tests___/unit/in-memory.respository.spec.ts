@@ -83,7 +83,7 @@ describe('In memory repository unit tests', () => {
   test('Should delete an entity', async () => {
     await sut.insert(entity)
     await sut.delete(entity._id)
-    await expect(sut.items).toHaveLength(0)
+    expect(sut.items).toHaveLength(0)
   })
 
   test('Deleting an entity with a non-existent ID', async () => {
@@ -99,37 +99,11 @@ describe('In memory repository unit tests', () => {
   })
 
   // test('should throw an error when inserting an entity with a duplicate ID', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository() {}
-  //   const entity = { id: '1', name: 'Entity 1' }
-  //   await repository.insert(entity)
-
-  //   // Act
-  //   const insertDuplicate = async () => {
-  //     await repository.insert(entity)
-  //   }
-
-  //   // Assert
-  //   await expect(insertDuplicate()).rejects.toThrow(NotFoundError)
+  //   await sut.insert(entity)
+  //   await expect(sut.insert(entity)).rejects.toThrow(NotFoundError)
   // })
 
-  // test('should return an empty array when the repository is empty', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-
-  //   // Act
-  //   const result = await repository.findAll()
-
-  //   // Assert
-  //   expect(result).toEqual([])
-  // })
-
-  // test('Updating an entity with a non-existent ID', async () => {
-  //   // Arrange
-  //   const repository = new TestRepository()
-  //   const entity = new TestEntity('1', 'Test')
-
-  //   // Act & Assert
-  //   await expect(repository.update(entity)).rejects.toThrow(NotFoundError)
-  // })
+  test('should return an empty array when the repository is empty', async () => {
+    expect((await sut.findAll()).length).toBe(0)
+  })
 })
