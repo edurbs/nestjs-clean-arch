@@ -80,19 +80,17 @@ describe('In memory repository unit tests', () => {
     expect(result.toJSON()).toStrictEqual(updatedEntity.toJSON())
   })
 
-  // test('Should delete an entity', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-  //   const entity = { id: '1', name: 'Entity 1' }
-  //   await repository.insert(entity)
+  test('Should delete an entity', async () => {
+    await sut.insert(entity)
+    await sut.delete(entity._id)
+    await expect(sut.items).toHaveLength(0)
+  })
 
-  //   // Act
-  //   await repository.delete('1')
-
-  //   // Assert
-  //   expect(repository.items.length).toBe(0)
-  //   expect(repository.items.find(item => item.id === '1')).toBeUndefined()
-  // })
+  test('Deleting an entity with a non-existent ID', async () => {
+    await expect(() => sut.delete('fake-id')).rejects.toThrow(
+      new NotFoundError('Entity not found'),
+    )
+  })
 
   // test('should return the index of an entity', async () => {
   //   // Arrange
@@ -140,29 +138,5 @@ describe('In memory repository unit tests', () => {
 
   //   // Act & Assert
   //   await expect(repository.update(entity)).rejects.toThrow(NotFoundError)
-  // })
-
-  // test('Deleting an entity with a non-existent ID', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-  //   const id = 'non-existent-id'
-
-  //   // Act
-  //   try {
-  //     await repository.delete(id)
-  //   } catch (error) {
-  //     // Assert
-  //     expect(error).toBeInstanceOf(NotFoundError)
-  //     expect(error.message).toBe('Entity not found')
-  //   }
-  // })
-
-  // test('should throw NotFoundError when deleting an entity with a valid ID but not present in the repository', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-  //   const entityId = '1'
-
-  //   // Act & Assert
-  //   await expect(repository.delete(entityId)).rejects.toThrow(NotFoundError)
   // })
 })
