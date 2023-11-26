@@ -92,18 +92,11 @@ describe('In memory repository unit tests', () => {
     )
   })
 
-  // test('should return the index of an entity', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository() {}
-  //   const entity = { id: '1' }
-  //   repository.items = [entity]
-
-  //   // Act
-  //   const index = repository._getIndex('1')
-
-  //   // Assert
-  //   expect(index).toBe(0)
-  // })
+  test('should return the index of an entity', async () => {
+    sut.items = [entity]
+    const index = sut['_getIndex'](entity._id)
+    expect(index).toBe(0)
+  })
 
   // test('should throw an error when inserting an entity with a duplicate ID', async () => {
   //   // Arrange
