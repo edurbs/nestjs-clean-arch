@@ -40,7 +40,7 @@ lerna-debug.log*
 !.docker/entrypoint.sh
 !.docker/postgres/Dockerfile
 
-.env
-.env.development
-.env.test
+# .env
+# .env.development
+# .env.test
 tsconfig.tsbuildinfo
