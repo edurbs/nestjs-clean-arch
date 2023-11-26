@@ -41,16 +41,18 @@ describe('In memory repository unit tests', () => {
     expect(sut.items[0].toJSON()).toStrictEqual(result.toJSON())
   })
 
-  // test('should return all entities', async () => {
-  //   const repository = new StubInMemoryRepository() {}
-  //   const entity1 = { id: '1', name: 'Entity 1' }
-  //   const entity2 = { id: '2', name: 'Entity 2' }
-  //   repository.items = [entity1, entity2]
+  test('should return all entities', async () => {
+    const entity2 = entity
+    sut.insert(entity)
+    sut.insert(entity2)
 
-  //   const result = await repository.findAll()
+    const result = await sut.findAll()
 
-  //   expect(result).toEqual([entity1, entity2])
-  // })
+    expect(result).toEqual([entity, entity2])
+    expect(result.length).toBe(2)
+    expect(result[0].toJSON()).toStrictEqual(entity.toJSON())
+    expect(result[1].toJSON()).toStrictEqual(entity2.toJSON())
+  })
 
   // class TestEntity extends Entity {};
 
