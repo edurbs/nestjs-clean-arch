@@ -8,7 +8,6 @@ module.exports = {
 
   plugins: ['@typescript-eslint/eslint-plugin', 'prettier'],
   extends: [
-    'eslint-recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -31,6 +30,6 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'off',
     usetabs: 0,
     'no-console': 1,
-    'prettier/prettier': 2,
+    'prettier/prettier': 0,
   },
 }
