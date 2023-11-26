@@ -1,4 +1,5 @@
 import { Entity } from '@/shared/domain/entities/entity'
+import { NotFoundError } from '@/shared/domain/errors/not-found-error'
 import { InMemoryRepository } from '../../in-memory.repository'
 
 type StubEntityProps = {
@@ -11,31 +12,34 @@ class StubInMemoryRepository extends InMemoryRepository<StubEntity> {}
 
 describe('In memory repository unit tests', () => {
   let sut: StubInMemoryRepository
+  let entity: StubEntity
 
   beforeEach(() => {
     sut = new StubInMemoryRepository()
+    entity = new StubEntity({ name: 'test name', price: 10 })
   })
 
   test('should insert a new entity', async () => {
-    const entity = new StubEntity({ name: 'test name', price: 10 })
     await sut.insert(entity)
     expect(sut.items.length).toBe(1)
     expect(sut.items[0]).toBe(entity)
     expect(sut.items[0].toJSON()).toStrictEqual(entity.toJSON())
   })
 
-  // test('should find an entity by id', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-  //   const entity = new Entity('1', 'Test Entity')
-  //   repository.items = [entity]
+  test('should throw NotFoundError when entity is not found', async () => {
+    const id = 'non-existent-id'
+    const action = async () => {
+      await sut.findById(id)
+    }
+    await expect(action).rejects.toThrow(new NotFoundError('Entity not found'))
+  })
 
-  //   // Act
-  //   const result = await repository.findById('1')
-
-  //   // Assert
-  //   expect(result).toEqual(entity)
-  // })
+  test('should find an entity by id', async () => {
+    sut.insert(entity)
+    const result = await sut.findById(entity.id)
+    expect(result).toEqual(entity)
+    expect(sut.items[0].toJSON()).toStrictEqual(result.toJSON())
+  })
 
   // test('should return all entities', async () => {
   //   const repository = new StubInMemoryRepository() {}
@@ -114,20 +118,6 @@ describe('In memory repository unit tests', () => {
 
   //   // Assert
   //   await expect(insertDuplicate()).rejects.toThrow(NotFoundError)
-  // })
-
-  // test('should throw NotFoundError when entity is not found', async () => {
-  //   // Arrange
-  //   const repository = new StubInMemoryRepository()
-  //   const id = 'non-existent-id'
-
-  //   // Act
-  //   const action = async () => {
-  //     await repository.findById(id)
-  //   }
-
-  //   // Assert
-  //   await expect(action).rejects.toThrow(NotFoundError)
   // })
 
   // test('should return an empty array when the repository is empty', async () => {
