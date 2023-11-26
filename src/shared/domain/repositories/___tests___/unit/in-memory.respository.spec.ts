@@ -54,31 +54,31 @@ describe('In memory repository unit tests', () => {
     expect(result[1].toJSON()).toStrictEqual(entity2.toJSON())
   })
 
-  // class TestEntity extends Entity {};
+  test('should throw NotFoundError when updating an non existent entity', async () => {
+    const action = async () => {
+      await sut.update(entity)
+    }
+    await expect(action).rejects.toThrow(new NotFoundError('Entity not found'))
+  })
 
-  // describe('StubInMemoryRepository', () => {
-  //   let repository: StubInMemoryRepository<TestEntity>
+  it('should update an entity', async () => {
+    await sut.insert(entity)
 
-  //   beforeEach(() => {
-  //     repository = new StubInMemoryRepository<TestEntity>()
-  //   })
+    const updatedEntity = new StubEntity(
+      {
+        name: 'Updated Entity',
+        price: 15,
+      },
+      entity.id,
+    )
 
-  //   it('should update an entity', async () => {
-  //     const entity = new TestEntity()
-  //     entity.id = '1'
-  //     await repository.insert(entity)
+    await sut.update(updatedEntity)
 
-  //     const updatedEntity = new TestEntity()
-  //     updatedEntity.id = '1'
-  //     updatedEntity.name = 'Updated Entity'
+    const result = await sut.findById(entity.id)
 
-  //     await repository.update(updatedEntity)
-
-  //     const result = await repository.findById('1')
-
-  //     expect(result).toEqual(updatedEntity)
-  //   })
-  // })
+    expect(result).toEqual(updatedEntity)
+    expect(result.toJSON()).toStrictEqual(updatedEntity.toJSON())
+  })
 
   // test('Should delete an entity', async () => {
   //   // Arrange
