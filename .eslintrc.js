@@ -30,6 +30,6 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'off',
     usetabs: 0,
     'no-console': 1,
-    'prettier/prettier': 0,
+    'prettier/prettier': 1,
   },
 }

@@ -9,5 +9,4 @@ export abstract class InMemorySearcheableRepository<E extends Entity>
   search(props: any): Promise<any> {
     throw new Error('Method not implemented.')
   }
-
 }
