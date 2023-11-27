@@ -1,5 +1,9 @@
 import { Entity } from '@/shared/domain/entities/entity'
 import { InMemorySearcheableRepository } from '../../in-memory-searcheable.repository'
+import {
+  SearchParams,
+  SearchResult,
+} from '../../searcheable-repository-contracts'
 
 type StubEntityProps = {
   name: string
@@ -9,6 +13,7 @@ class StubEntity extends Entity<StubEntityProps> {}
 
 class StubInMemorySearcheableRepository extends InMemorySearcheableRepository<StubEntity> {
   sortableFields: string[] = ['name']
+  public items: StubEntity[] = []
   protected async applyFilter(
     items: StubEntity[],
     filter: string | null,
@@ -167,5 +172,77 @@ describe('In memory repository unit tests', () => {
     })
   })
 
-  describe('search method', () => {})
+  describe('search method', () => {
+    let itemsToSearch: StubEntity[] = []
+    const entityToClone: StubEntity = new StubEntity({
+      name: 'SOME NAME',
+      price: 10,
+    })
+
+    beforeEach(() => {
+      itemsToSearch = Array(16).fill(entityToClone)
+      // set sut.items with itemsToSearch
+      sut.items = itemsToSearch
+    })
+
+    it('should return a search result with 15 items', async () => {
+      expect(await sut.search(new SearchParams())).toStrictEqual(
+        new SearchResult({
+          items: Array(15).fill(entityToClone),
+          total: 16,
+          currentPage: 1,
+          perPage: 15,
+          sort: null,
+          sortDir: null,
+          filter: null,
+        }),
+      )
+    })
+
+    it('should paginate and filter ', async () => {
+      const itemsToTest = [
+        new StubEntity({ name: 'some name', price: 10 }),
+        new StubEntity({ name: 'a', price: 10 }),
+        new StubEntity({ name: 'SOME NAME', price: 10 }),
+        new StubEntity({ name: 'SOME name', price: 10 }),
+      ]
+      sut.items = itemsToTest
+      let params = await sut.search(
+        new SearchParams({
+          page: 1,
+          perPage: 2,
+          filter: 'SOME NAME',
+        }),
+      )
+      expect(params).toStrictEqual(
+        new SearchResult({
+          items: [itemsToTest[0], itemsToTest[2]],
+          total: 3,
+          currentPage: 1,
+          perPage: 2,
+          sort: null,
+          sortDir: null,
+          filter: 'SOME NAME',
+        }),
+      )
+      params = await sut.search(
+        new SearchParams({
+          page: 2,
+          perPage: 2,
+          filter: 'SOME NAME',
+        }),
+      )
+      expect(params).toStrictEqual(
+        new SearchResult({
+          items: [itemsToTest[0], itemsToTest[2]],
+          total: 3,
+          currentPage: 2,
+          perPage: 2,
+          sort: null,
+          sortDir: null,
+          filter: 'SOME NAME',
+        }),
+      )
+    })
+  })
 })
