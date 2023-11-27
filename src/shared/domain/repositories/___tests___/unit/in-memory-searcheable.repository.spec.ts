@@ -76,7 +76,51 @@ describe('In memory repository unit tests', () => {
     })
   })
 
-  describe('applySort method', () => {})
+  describe('applySort method', () => {
+    let itemsToSort: StubEntity[]
+    beforeEach(() => {
+      itemsToSort = [
+        new StubEntity({
+          name: 'c',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'a',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'b',
+          price: 10,
+        }),
+      ]
+    })
+
+    it('should not sort items when null params are provided', async () => {
+      expect(await sut['applySort'](itemsToSort, null, null)).toStrictEqual(
+        itemsToSort,
+      )
+    })
+
+    it('should not sort then neutral fields are provided', async () => {
+      expect(await sut['applySort'](itemsToSort, 'price', 'asc')).toStrictEqual(
+        itemsToSort,
+      )
+    })
+
+    it('should sort ascending items when valid params are provided', async () => {
+      expect(await sut['applySort'](itemsToSort, 'name', 'asc')).toStrictEqual([
+        itemsToSort[1],
+        itemsToSort[2],
+        itemsToSort[0],
+      ])
+    })
+
+    it('should sort descending items when valid params are provided', async () => {
+      expect(await sut['applySort'](itemsToSort, 'name', 'desc')).toStrictEqual(
+        [itemsToSort[0], itemsToSort[2], itemsToSort[1]],
+      )
+    })
+  })
 
   describe('applyPaginate method', () => {})
 
