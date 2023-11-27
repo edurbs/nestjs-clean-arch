@@ -11,6 +11,51 @@ export type SearchProps<Filter = string> = {
   filter?: Filter | null
 }
 
+export type SearchResultProps<E extends Entity, Filter> = {
+  items: E[]
+  total: number
+  currentPage: number
+  perPage: number
+  sort: string | null
+  sortDir: SortDirection | null
+  filter: Filter | null
+}
+
+export class SearchResult<E extends Entity, Filter = string> {
+  readonly items: E[]
+  readonly total: number
+  readonly currentPage: number
+  readonly perPage: number
+  readonly lastPage: number
+  readonly sort: string | null
+  readonly sortDir: SortDirection | null
+  readonly filter: Filter | null
+
+  constructor(props: SearchResultProps<E, Filter>) {
+    this.items = props.items
+    this.total = props.total
+    this.currentPage = props.currentPage
+    this.perPage = props.perPage
+    this.lastPage = Math.ceil(this.total / this.perPage)
+    this.sort = props.sort ?? null
+    this.sortDir = props.sortDir ?? null
+    this.filter = props.filter ?? null
+  }
+
+  toJSON(forceEntity = false) {
+    return {
+      items: forceEntity ? this.items.map(item => item.toJSON()) : this.items,
+      total: this.total,
+      currentPage: this.currentPage,
+      perPage: this.perPage,
+      lastPage: this.lastPage,
+      sort: this.sort,
+      sortDir: this.sortDir,
+      filter: this.filter,
+    }
+  }
+}
+
 export class SearchParams {
   private _page: number
   private _perPage: number
@@ -19,11 +64,11 @@ export class SearchParams {
   private _filter: string | null
 
   constructor(props: SearchProps = {}) {
-    this.page = props.page || 1
-    this.perPage = props.perPage || 15
-    this.sort = props.sort || null
-    this.sortDir = props.sortDir || null
-    this.filter = props.filter || null
+    this.page = props.page ?? 1
+    this.perPage = props.perPage ?? 15
+    this.sort = props.sort ?? null
+    this.sortDir = props.sortDir ?? null
+    this.filter = props.filter ?? null
   }
 
   get page(): number {
@@ -74,8 +119,9 @@ export class SearchParams {
 
 export interface SearcheableRepositoryInterface<
   E extends Entity,
-  SearchInput,
-  SearchOutput,
+  Filter = string,
+  SearchInput = SearchParams,
+  SearchOutput = SearchResult<E, Filter>,
 > extends RepositoryInterface<E> {
   search(props: SearchInput): Promise<SearchOutput>
 }

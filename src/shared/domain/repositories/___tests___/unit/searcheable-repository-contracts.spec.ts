@@ -20,7 +20,7 @@ describe('Searcheable repository unit tests', () => {
       })
 
       it('should set page property with integer number when a float number is provided', () => {
-        const sut = new SearchParams({ page: 5.5 })
+        const sut = new SearchParams({ page: 5.6 })
         expect(sut.page).toBe(5)
       })
 
@@ -68,6 +68,7 @@ describe('Searcheable repository unit tests', () => {
         expect(sut.sort).toBe('name')
       })
     })
+
     describe('sortDir property', () => {
       it('Should set sortDir property with null when no value is provided', () => {
         const sut = new SearchParams()
@@ -88,6 +89,7 @@ describe('Searcheable repository unit tests', () => {
         expect(sut.sortDir).toBeNull()
       })
     })
+
     describe('filter property', () => {
       it('Should set filter property with null when no value is provided', () => {
         const sut = new SearchParams()
