@@ -1,4 +1,8 @@
-import { SearchParams } from '../../searcheable-repository-contracts'
+import {
+  SearchParams,
+  SearchResult,
+  SortDirection,
+} from '../../searcheable-repository-contracts'
 
 describe('Searcheable repository unit tests', () => {
   describe('SearchParams tests', () => {
@@ -100,6 +104,85 @@ describe('Searcheable repository unit tests', () => {
         const sut = new SearchParams({ filter: 'someValue' })
         expect(sut.filter).toBe('someValue')
       })
+    })
+  })
+
+  describe('SearchResult tests', () => {
+    it('should create a search result with valid values', () => {
+      const sortDirection: SortDirection = 'asc'
+      const props = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        sort: 'name',
+        sortDir: sortDirection,
+        filter: 'test',
+      }
+      const sut = new SearchResult(props)
+      const result = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        sort: 'name',
+        sortDir: sortDirection,
+        filter: 'test',
+        lastPage: 2,
+      }
+      expect(sut.toJSON()).toStrictEqual(result)
+    })
+    it('should create a search result with null values in properties sort, sortDir and filter', () => {
+      const props = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        sort: null,
+        sortDir: null,
+        filter: null,
+      }
+      const sut = new SearchResult(props)
+      const result = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        sort: null,
+        sortDir: null,
+        filter: null,
+        lastPage: 2,
+      }
+      expect(sut.toJSON()).toStrictEqual(result)
+    })
+    it('should set lastPage with 1 when total is less than perPage', () => {
+      const sortDirection: SortDirection = 'asc'
+      const props = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 4,
+        currentPage: 1,
+        perPage: 10,
+        sort: 'name',
+        sortDir: sortDirection,
+        filter: 'test',
+      }
+      const sut = new SearchResult(props)
+      expect(sut.lastPage).toStrictEqual(1)
+    })
+
+    it('should set lastPage with the total divided by perPage, rounding it to up ', () => {
+      const sortDirection: SortDirection = 'asc'
+      const props = {
+        items: ['test1', 'test2', 'test3', 'test4'] as any,
+        total: 54,
+        currentPage: 1,
+        perPage: 10,
+        sort: 'name',
+        sortDir: sortDirection,
+        filter: 'test',
+      }
+      const sut = new SearchResult(props)
+      expect(sut.lastPage).toStrictEqual(6)
     })
   })
 })
