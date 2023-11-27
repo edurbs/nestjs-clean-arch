@@ -66,6 +66,11 @@ export abstract class InMemorySearcheableRepository<E extends Entity>
     page: SearchParams['page'],
     perPage: SearchParams['perPage'],
   ): Promise<E[]> {
-    throw new Error('Method not implemented.')
+    if (!page || !perPage) {
+      return items
+    }
+    const start = (page - 1) * perPage
+    const limit = start + perPage
+    return items.slice(start, limit)
   }
 }
