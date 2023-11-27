@@ -122,7 +122,50 @@ describe('In memory repository unit tests', () => {
     })
   })
 
-  describe('applyPaginate method', () => {})
+  describe('applyPaginate method', () => {
+    let itemsToPaginate: StubEntity[]
+    beforeEach(() => {
+      itemsToPaginate = [
+        new StubEntity({
+          name: 'a',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'b',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'c',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'd',
+          price: 10,
+        }),
+        new StubEntity({
+          name: 'e',
+          price: 10,
+        }),
+      ]
+    })
+
+    it('should paginate items when valid params are provided', async () => {
+      expect(await sut['applyPaginate'](itemsToPaginate, 1, 2)).toStrictEqual([
+        itemsToPaginate[0],
+        itemsToPaginate[1],
+      ])
+      expect(await sut['applyPaginate'](itemsToPaginate, 2, 2)).toStrictEqual([
+        itemsToPaginate[2],
+        itemsToPaginate[3],
+      ])
+      expect(await sut['applyPaginate'](itemsToPaginate, 3, 2)).toStrictEqual([
+        itemsToPaginate[4],
+      ])
+      expect(await sut['applyPaginate'](itemsToPaginate, 4, 2)).toStrictEqual(
+        [],
+      )
+    })
+  })
 
   describe('search method', () => {})
 })
